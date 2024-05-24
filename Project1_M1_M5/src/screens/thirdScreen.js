@@ -3,7 +3,7 @@ import {View, Text, Image, ScrollView} from 'react-native';
 
 const ThirdScreen = () => {
   return (
-    <View style={{flex: 1, flexDirection: 'column'}}>
+    <View style={{flex: 1, flexDirection: 'column-reverse'}}>
       <View
         style={{
           backgroundColor: 'red',
@@ -55,11 +55,12 @@ const ThirdScreen = () => {
 
 const AddImage = () => {
   return (
-    <ScrollView vertical={true}>
+    <ScrollView horizontal={true}>
       <View
         style={{
           flex: 1,
           alignItems: 'center',
+          flexDirection: 'row',
         }}>
         <View style={{margin: 8, padding: 8}}>
           <Image
@@ -139,4 +140,90 @@ const AddImage = () => {
   );
 };
 
-export default AddImage;
+const ChallengeScreen = () => {
+  return (
+    <View>
+      <View style={{alignItems: 'center', margin: 8}}>
+        <Text style={{fontWeight: 'bold', fontSize: 26, color: 'blue'}}>
+          Pokemon’s Profile
+        </Text>
+      </View>
+      <ScrollView>
+        <View style={{margin: 12, padding: 8, flexDirection: 'row'}}>
+          <ScrollView horizontal={true}>
+            <Image
+              style={{
+                width: 150,
+                height: 150,
+                backgroundColor: 'lavender',
+                borderRadius: 12,
+                borderWidth: 2,
+                borderColor: 'green',
+                margin: 12,
+              }}
+              source={require('../../assets/images/pikachu.png')}
+            />
+            <View style={{justifyContent: 'center'}}>
+              <Text>
+                Name : Pikachu{'\n'}
+                Category : Mouse{'\n'}
+                Abilities : Static{'\n'}
+                Weaknesses : Ground
+              </Text>
+            </View>
+          </ScrollView>
+        </View>
+        <View style={{margin: 12, padding: 8, flexDirection: 'row'}}>
+          <ScrollView horizontal={true}>
+            <Image
+              style={{
+                width: 150,
+                height: 150,
+                backgroundColor: 'lavender',
+                borderRadius: 12,
+                borderWidth: 2,
+                borderColor: 'green',
+                margin: 12,
+              }}
+              source={require('../../assets/images/pikachu.png')}
+            />
+            <View style={{justifyContent: 'center'}}>
+              <Text>
+                Name : Pikachu{'\n'}
+                Category : Mouse{'\n'}
+                Abilities : Static{'\n'}
+                Weaknesses : Ground
+              </Text>
+            </View>
+          </ScrollView>
+        </View>
+        <View style={{margin: 12, padding: 8, flexDirection: 'row'}}>
+          <ScrollView horizontal={true}>
+            <Image
+              style={{
+                width: 150,
+                height: 150,
+                backgroundColor: 'lavender',
+                borderRadius: 12,
+                borderWidth: 2,
+                borderColor: 'green',
+                margin: 12,
+              }}
+              source={require('../../assets/images/pikachu.png')}
+            />
+            <View style={{justifyContent: 'center'}}>
+              <Text>
+                Name : Pikachu{'\n'}
+                Category : Mouse{'\n'}
+                Abilities : Static{'\n'}
+                Weaknesses : Ground
+              </Text>
+            </View>
+          </ScrollView>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+export default ChallengeScreen;
