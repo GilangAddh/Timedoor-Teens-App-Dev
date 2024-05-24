@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, ImageBackground, TextInput, ScrollView} from 'react-native';
 import {InputComponent} from '../components/InputComponent';
+import {Icon} from 'react-native-elements';
 const FourthScreen = () => {
   return (
     <ScrollView>
@@ -25,6 +26,7 @@ const FourthScreen = () => {
               fontWeight: 'bold',
               borderRadius: 6,
             }}>
+            <Icon name="heart" type="font-awesome" size={18} color="red" />
             Disneyland
           </Text>
         </ImageBackground>
@@ -104,4 +106,4 @@ const ChallengeScreen4 = () => {
   );
 };
 
-export default ChallengeScreen4;
+export default FourthScreen;
