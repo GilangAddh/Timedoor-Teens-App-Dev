@@ -4,6 +4,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import InstagramHomeScreen from './src/screens/instagramHomeScreen';
 // import ChallengeScreen from './src/screens/secondScreen';
 // import ChallengeScreen from './src/screens/firstScreen';
+
 // import ChallengeScreen from './src/screens/thirdScreen';
 
 const App = () => {
