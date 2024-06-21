@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, Text, Image, FlatList, StyleSheet} from 'react-native';
+import {userData} from '../../data/TryCodeData';
 import {movieData} from '../../data/MovieData';
 import {ShowMovie} from '../component/MovieComponent';
 import {useState, useEffect} from 'react';
-import {Icon} from 'react-native-elements';
-
 const HomeScreen = () => {
   const [recommended, setRecommended] = useState([]);
   const [mostViewed, setMostViewed] = useState([]);
@@ -56,43 +55,9 @@ const HomeScreen = () => {
               <View style={styles.containerText}>
                 <Text style={styles.title}>{item.title}</Text>
                 <View style={styles.yearContainer}>
-                  <Icon
-                    name="calendar"
-                    type="font-awesome"
-                    size={24}
-                    color="#000"
-                  />
-                  <Text> {item.year}</Text>
+                  <Text>{item.year}</Text>
                 </View>
-                <View style={styles.yearContainer}>
-                  <Icon name="star" type="font-awesome" size={24} />
-                  {item.rating === 5 ? (
-                    <Image
-                      style={styles.rating}
-                      source={require('../../assets/images/five-stars.png')}
-                    />
-                  ) : item.rating === 4 ? (
-                    <Image
-                      style={styles.rating}
-                      source={require('../../assets/images/four-stars.png')}
-                    />
-                  ) : item.rating === 3 ? (
-                    <Image
-                      style={styles.rating}
-                      source={require('../../assets/images/three-stars.png')}
-                    />
-                  ) : item.rating === 2 ? (
-                    <Image
-                      style={styles.rating}
-                      source={require('../../assets/images/two-stars.png')}
-                    />
-                  ) : item.rating === 1 ? (
-                    <Image
-                      style={styles.rating}
-                      source={require('../../assets/images/star.png')}
-                    />
-                  ) : null}
-                </View>
+                <Text>{item.rating}</Text>
               </View>
             </View>
           );
@@ -161,8 +126,6 @@ const styles = StyleSheet.create({
   },
   yearContainer: {
     marginBottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   mainCategoryContainer: {
     marginTop: 8,
@@ -176,10 +139,6 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  rating: {
-    width: 100,
-    height: 20,
   },
 });
 export default HomeScreen;

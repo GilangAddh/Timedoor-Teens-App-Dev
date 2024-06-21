@@ -17,11 +17,27 @@ const TryCodeScreen = () => {
         keyExtractor={item => item.id}
         renderItem={({item}) => {
           return (
-            <View style={styles.containerAnItem}>
+            <View
+              style={[
+                styles.containerAnItem,
+                {
+                  backgroundColor:
+                    item.gender.toLocaleLowerCase() === 'male'
+                      ? 'moccasin'
+                      : 'lavender',
+                },
+              ]}>
               <Image source={{uri: item.imageLink}} style={styles.imageItem} />
               <Text>{item.name}</Text>
               <Text>{item.gender}</Text>
               <Text>{item.age}</Text>
+              {item.age >= 6 && item.age <= 12 ? (
+                <Text>Child</Text>
+              ) : item.age >= 13 && item.age <= 17 ? (
+                <Text>Teen</Text>
+              ) : item.age >= 18 && item.age <= 64 ? (
+                <Text>Adult</Text>
+              ) : null}
             </View>
           );
         }}
@@ -36,7 +52,6 @@ const styles = StyleSheet.create({
   },
   containerAnItem: {
     margin: 8,
-    backgroundColor: 'lavender',
     borderWidth: 1,
   },
   contentContainerStyle: {
