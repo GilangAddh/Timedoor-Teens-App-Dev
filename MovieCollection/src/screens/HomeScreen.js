@@ -4,8 +4,9 @@ import {movieData} from '../../data/MovieData';
 import {ShowMovie} from '../component/MovieComponent';
 import {useState, useEffect} from 'react';
 import {Icon} from 'react-native-elements';
+import {ButtonComponent} from '../component/ButtonComponent';
 
-const HomeScreen = () => {
+const HomeScreen = props => {
   const [recommended, setRecommended] = useState([]);
   const [mostViewed, setMostViewed] = useState([]);
 
@@ -42,6 +43,8 @@ const HomeScreen = () => {
     const sortedMostViewed = [...movieData].sort(compareView);
     setMostViewed(sortedMostViewed);
   }, []);
+
+  const {navigation} = props;
 
   return (
     <View style={styles.container}>
@@ -93,6 +96,9 @@ const HomeScreen = () => {
                     />
                   ) : null}
                 </View>
+                <ButtonComponent
+                  onPress={() => navigation.navigate('DetailMovie', item)}
+                />
               </View>
             </View>
           );
