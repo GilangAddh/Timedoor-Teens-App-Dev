@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, Image, FlatList, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {movieData} from '../../data/MovieData';
 import {ShowMovie} from '../component/MovieComponent';
 import {useState, useEffect} from 'react';
@@ -9,6 +16,7 @@ import {ButtonComponent} from '../component/ButtonComponent';
 const HomeScreen = props => {
   const [recommended, setRecommended] = useState([]);
   const [mostViewed, setMostViewed] = useState([]);
+  const [allMostViewed, setAllMostViewed] = useState([]);
 
   const compareRating = (a, b) => {
     const ratingA = a.rating;
@@ -35,13 +43,20 @@ const HomeScreen = props => {
   };
 
   useEffect(() => {
+    const threeRecommended = [];
     const sortedRecommended = [...movieData].sort(compareRating);
-    setRecommended(sortedRecommended);
-  }, []);
 
-  useEffect(() => {
+    const threeMostViewed = [];
     const sortedMostViewed = [...movieData].sort(compareView);
-    setMostViewed(sortedMostViewed);
+
+    for (let i = 0; i < 3; i++) {
+      threeRecommended.push(sortedRecommended[i]);
+      threeMostViewed.push(sortedMostViewed[i]);
+    }
+
+    setRecommended(threeRecommended);
+    setMostViewed(threeMostViewed);
+    setAllMostViewed(sortedMostViewed);
   }, []);
 
   const {navigation} = props;
@@ -109,6 +124,14 @@ const HomeScreen = props => {
               <View style={styles.categoryContainer}>
                 <Text style={styles.categoryText}>Most Viewed</Text>
               </View>
+              <View style={styles.seeAllContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('MostView', {allMostViewed})
+                  }>
+                  <Text style={styles.seeAllText}>See All</Text>
+                </TouchableOpacity>
+              </View>
             </View>
             <FlatList
               horizontal
@@ -120,15 +143,29 @@ const HomeScreen = props => {
                     image={item.imageLink}
                     title={item.title}
                     viewers={item.viewers}
+                    isHome={true}
                   />
                 );
               }}
+              contentContainerStyle={{
+                flex: mostViewed.length === 0 ? 1 : 0,
+              }}
+              ListEmptyComponent={
+                <View style={{alignItems: 'center', flex: 1}}>
+                  <Text>No items in this category.</Text>
+                </View>
+              }
             />
             <View style={styles.mainCategoryContainer}>
               <View style={styles.categoryContainer}>
                 <Text style={styles.categoryText}>Recommended</Text>
               </View>
             </View>
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={{alignItems: 'center'}}>
+            <Text>No items in this category.</Text>
           </View>
         }
       />
@@ -186,6 +223,15 @@ const styles = StyleSheet.create({
   rating: {
     width: 100,
     height: 20,
+  },
+  seeAllContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  seeAllText: {
+    color: '#009688',
+    textDecorationLine: 'underline',
   },
 });
 export default HomeScreen;

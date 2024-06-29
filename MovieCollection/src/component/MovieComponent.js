@@ -57,14 +57,14 @@ const styles = StyleSheet.create({
 });
 
 export const ShowMovie = props => {
-  const {image, title, viewers} = props;
+  const {image, title, viewers, isHome} = props;
 
   const numberWithCommas = number => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
 
   return (
-    <View style={styles.horizontalDataContainer}>
+    <View style={[styles.horizontalDataContainer, {flex: isHome ? 0 : 1}]}>
       <Image style={styles.movieImage} source={{uri: image}} />
       <View style={styles.horizontalTitleContainer}>
         <Text style={styles.horizontalTitle}>{title}</Text>
