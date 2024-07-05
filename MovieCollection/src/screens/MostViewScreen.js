@@ -24,6 +24,7 @@ const MostViewScreen = props => {
               image={item.imageLink}
               title={item.title}
               viewers={item.viewers}
+              onPress={() => navigation.navigate('DetailMovie', item)}
             />
           );
         }}
