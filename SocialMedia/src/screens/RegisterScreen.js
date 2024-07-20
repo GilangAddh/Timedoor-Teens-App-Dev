@@ -1,61 +1,62 @@
 import {
   View,
   Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
   ScrollView,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button} from '../components/ButtonComponents';
 import {Input} from '../components/InputComponents';
+import {useDispatch, useSelector} from 'react-redux';
+import {createProfile} from '../../store/action/profileAction';
 
-const LoginScreen = props => {
+const RegisterScreen = props => {
   const {navigation} = props;
+  const dispatch = useDispatch();
+
+  const globalProfileData = useSelector(store => store.profileReducer);
+  useEffect(() => {
+    console.log(globalProfileData);
+  }, [globalProfileData]);
+
+  useEffect(() => {
+    dispatch(
+      createProfile({
+        username: 'gilangadhi',
+        email: 'gilangadhiperkasa@gmail.com',
+        password: 'gilang123',
+      }),
+    );
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.scroll}>
       <View style={styles.mainContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={require('../../assets/images/login.png')}
-          />
-        </View>
         <View style={styles.inputContainer}>
           <Input title="Username" placeholder="Username" />
+          <Input title="Email" placeholder="Email" />
           <Input title="Password" placeholder="Password" />
         </View>
-        <Button text="Login" />
+        <Button text="Register" />
         <View style={styles.textContainer}>
-          <Text style={styles.text}>Don't have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.registerText}>Register</Text>
+          <Text style={styles.text}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.loginText}>Login</Text>
           </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
   );
 };
-
-export default LoginScreen;
-
 const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
   },
   mainContainer: {
-    backgroundColor: '#E6E6FA',
     flex: 1,
+    backgroundColor: '#E6E6FA',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageContainer: {
-    marginTop: 32,
-    marginBottom: 16,
-  },
-  image: {
-    width: 180,
-    height: 180,
   },
   inputContainer: {
     padding: 16,
@@ -68,8 +69,10 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
   },
-  registerText: {
+  loginText: {
     color: '#1A5B0A',
     fontSize: 16,
   },
 });
+
+export default RegisterScreen;
