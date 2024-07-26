@@ -22,6 +22,7 @@ const RegisterScreen = props => {
     email: '',
     password: '',
   });
+  const [isPassVisible, setIsPassVisible] = useState(false);
 
   const onChangeInput = (inputType, value) => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -97,6 +98,10 @@ const RegisterScreen = props => {
             title="Password"
             placeholder="Password"
             onChangeText={text => onChangeInput('password', text)}
+            isPassword={true}
+            secureTextEntry={isPassVisible ? false : true}
+            iconName={isPassVisible ? 'eye-off' : 'eye'}
+            onPress={() => setIsPassVisible(!isPassVisible)}
           />
         </View>
         <Button text="Register" onPress={sendData} />
