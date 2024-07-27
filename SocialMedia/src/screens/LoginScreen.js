@@ -10,6 +10,8 @@ import React, {useState, useEffect} from 'react';
 import {Button} from '../components/ButtonComponents';
 import {Input} from '../components/InputComponents';
 import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import {loginUser} from '../../store/action/profileAction';
 
 const LoginScreen = props => {
   const {navigation} = props;
@@ -17,6 +19,7 @@ const LoginScreen = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const globalProfileData = useSelector(store => store.profileReducer);
+  const dispatch = useDispatch();
 
   const checkData = () => {
     if (username === '' || password === '') {
@@ -25,7 +28,8 @@ const LoginScreen = props => {
       username.toLowerCase() === globalProfileData.username.toLowerCase() &&
       password.toLowerCase() === globalProfileData.password.toLowerCase()
     ) {
-      navigation.navigate('Home');
+      navigation.navigate('Start');
+      dispatch(loginUser(true));
     } else {
       alert(`Your username and password didn’t match!`);
     }
