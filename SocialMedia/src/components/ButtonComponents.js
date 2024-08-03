@@ -2,9 +2,15 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 export const Button = props => {
-  const {text} = props;
+  const {text, isLogout} = props;
   return (
-    <View style={styles.buttonContainer}>
+    <View
+      style={[
+        styles.buttonContainer,
+        {
+          backgroundColor: isLogout ? '#F87B7B' : '#CAE3BB',
+        },
+      ]}>
       <TouchableOpacity style={styles.button} {...props}>
         <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>

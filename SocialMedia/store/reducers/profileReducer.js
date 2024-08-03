@@ -2,7 +2,7 @@ const initialState = {
   username: '',
   email: '',
   password: '',
-  isLogin: 'false',
+  isLogin: false,
 };
 export const profileReducer = (state = initialState, action) => {
   if (action.type === 'CREATE_PROFILE') {
