@@ -31,10 +31,35 @@ const AddNoteScreen = props => {
       });
       alert('Successfully save your note!');
       const data = realm.objects('Note');
+      navigation.navigate('NoteList');
       console.log(data);
     } else {
       alert('Empty Note');
     }
+  };
+
+  const getCurrentDate = () => {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    const currentDate = new Date();
+    const dateOnly = currentDate.getDate();
+    const monthOnly = currentDate.getMonth();
+    const yearOnly = currentDate.getFullYear();
+
+    return `${months[monthOnly]} ${dateOnly}, ${yearOnly}`;
   };
 
   return (
@@ -50,7 +75,7 @@ const AddNoteScreen = props => {
           />
         </TouchableOpacity>
       </View>
-      <Text style={styles.date}>Date</Text>
+      <Text style={styles.date}>{getCurrentDate()}</Text>
       <TextInput
         multiline
         placeholder="Write here"
