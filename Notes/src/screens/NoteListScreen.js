@@ -57,7 +57,9 @@ const NoteListScreen = props => {
         renderItem={({item}) => {
           return (
             <View style={styles.mainDataContainer}>
-              <TouchableOpacity style={styles.noteButton}>
+              <TouchableOpacity
+                style={styles.noteButton}
+                onPress={() => navigation.navigate('EditNote', {id: item.id})}>
                 <View style={styles.noteContainer}>
                   <Text style={styles.noteText}>{item.note}</Text>
                 </View>

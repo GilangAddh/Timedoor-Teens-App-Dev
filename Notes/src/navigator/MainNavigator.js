@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import NoteListScreen from '../screens/NoteListScreen';
 import TryCodeScreen from '../screens/TryCodeScreen';
 import AddNoteScreen from '../screens/AddNoteScreen';
+import EditNoteScreen from '../screens/EditNoteScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,13 @@ const MainNavigator = () => {
         <Stack.Screen
           name="AddNote"
           component={AddNoteScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="EditNote"
+          component={EditNoteScreen}
           options={{
             headerShown: false,
           }}
