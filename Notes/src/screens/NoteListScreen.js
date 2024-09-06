@@ -10,11 +10,13 @@ import React from 'react';
 import {Icon} from 'react-native-elements';
 import {useState, useEffect} from 'react';
 import realm from '../../store/realm';
+import {CheckBox} from 'react-native-elements';
 
 const NoteListScreen = props => {
   const {navigation} = props;
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const [isEdit, setIsEdit] = useState(false);
 
   const dateFormat = date => {
     const months = [
@@ -53,11 +55,54 @@ const NoteListScreen = props => {
     setSearchText(value);
   };
 
+  const setCheckBox = (id, status) => {
+    const newData = data.map(item => {
+      if (item.id === id) {
+        item.checkedStatus = !status;
+      }
+      return item;
+    });
+    setData(newData);
+  };
+
+  const removeNotes = () => {
+    const checkedItems = data
+      .filter(item => item.checkedStatus)
+      .map(item => item.id);
+
+    if (checkedItems.length) {
+      realm.write(() => {
+        checkedItems.forEach(id => {
+          const note = realm.objects('Note').filtered(`id = ${id}`);
+          realm.delete(note);
+        });
+      });
+
+      const updatedNotes = realm
+        .objects('Note')
+        .sorted('date', true)
+        .map(item => {
+          item.checkedStatus = false;
+          return item;
+        });
+
+      setData(updatedNotes);
+      setIsEdit(false);
+    } else {
+      alert('Nothing to remove!');
+    }
+  };
+
   useEffect(() => {
     const noteListPage = navigation.addListener('focus', () => {
       const notes = realm.objects('Note');
       const noteByDate = notes.sorted('date', true);
-      setData(noteByDate);
+      const newData = noteByDate.map(item => {
+        item.checkedStatus = false;
+        return item;
+      });
+      console.log(newData);
+      setData(newData);
       setSearchText('');
     });
     return noteListPage;
@@ -67,6 +112,13 @@ const NoteListScreen = props => {
     <View style={styles.mainContainer}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Notes</Text>
+        {data.length !== 0 ? (
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => setIsEdit(!isEdit)}>
+            {isEdit ? <Text>Cancel</Text> : <Text>Edit</Text>}
+          </TouchableOpacity>
+        ) : null}
       </View>
       <FlatList
         contentContainerStyle={styles.flatListContainer}
@@ -107,22 +159,42 @@ const NoteListScreen = props => {
                 </View>
                 <Text style={styles.dateText}>{dateFormat(item.date)}</Text>
               </TouchableOpacity>
+              {isEdit ? (
+                <CheckBox
+                  size={20}
+                  containerStyle={styles.checkBox}
+                  onPress={() => setCheckBox(item.id, item.checkedStatus)}
+                  checked={item.checkedStatus}
+                />
+              ) : null}
             </View>
           );
         }}
       />
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.addButton}>
-          <Icon
-            name="plus"
-            type="antdesign"
-            size={24}
-            color="white"
-            onPress={() => navigation.navigate('AddNote')}
-          />
+      {isEdit ? null : (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.addButton}>
+            <Icon
+              name="plus"
+              type="antdesign"
+              size={24}
+              color="white"
+              onPress={() => navigation.navigate('AddNote')}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
+      {isEdit ? (
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => removeNotes()}>
+          <Icon name="delete" type="antdesign" size={20} color="white" />
+          <View style={styles.containerDeleteText}>
+            <Text style={styles.deleteText}>Delete</Text>
+          </View>
         </TouchableOpacity>
-      </View>
+      ) : null}
     </View>
   );
 };
@@ -199,6 +271,28 @@ const styles = StyleSheet.create({
   noItem: {
     alignItems: 'center',
     margin: 8,
+  },
+  checkBox: {
+    paddingRight: 0,
+    paddingLeft: 0,
+  },
+  editButton: {
+    position: 'absolute',
+    padding: 16,
+    right: 8,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerDeleteText: {
+    marginLeft: 8,
+  },
+  deleteText: {
+    color: 'white',
   },
 });
 
