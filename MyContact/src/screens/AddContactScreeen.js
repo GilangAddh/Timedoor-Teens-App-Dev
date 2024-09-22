@@ -51,7 +51,11 @@ const AddContactScreen = props => {
           style={styles.input}
           placeholder="Write phone number here"
           value={phoneNumber}
-          onChangeText={setPhoneNumber}
+          onChangeText={text => {
+            const numericValue = text.replace(/[^0-9]/g, '');
+            setPhoneNumber(numericValue);
+          }}
+          keyboardType="numeric"
         />
       </View>
       <View style={styles.buttonContainer}>
