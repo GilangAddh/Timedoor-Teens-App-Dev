@@ -6,9 +6,12 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {InputComponent} from '../components/InputComponents';
+import SelectDropdown from 'react-native-select-dropdown';
+import {categoryList} from '../../data/Data';
+import realm from '../../store/realm';
 
 const AddProductScreen = () => {
   const [productData, setProductData] = useState({
@@ -21,6 +24,7 @@ const AddProductScreen = () => {
     facebook: '',
     phoneNumber: '',
   });
+  const dropdownRef = useRef({});
 
   const addImage = () => {
     ImageCropPicker.openPicker({
@@ -44,6 +48,53 @@ const AddProductScreen = () => {
       ...productData,
       [type]: value,
     });
+  };
+  const saveData = () => {
+    if (
+      productData.productName == '' ||
+      productData.imagePath == '' ||
+      productData.description == '' ||
+      productData.price == '' ||
+      productData.category == null
+    ) {
+      alert('Please fill all your product information!');
+    } else if (
+      productData.phoneNumber == '' &&
+      productData.instagram == '' &&
+      productData.facebook == ''
+    ) {
+      alert('Please fill at least one seller contact!');
+    } else {
+      const allData = realm.objects('Product'); // Mengakses seluruh data pada database 'Product'
+      const lastId = allData.length === 0 ? 0 : allData[allData.length - 1].id;
+
+      realm.write(() => {
+        realm.create('Product', {
+          // Menambahkan data ke dalam database
+          id: lastId + 1,
+          productName: productData.productName,
+          imagePath: productData.imagePath,
+          category: productData.category,
+          description: productData.description,
+          price: parseInt(productData.price),
+          instagram: productData.instagram,
+          facebook: productData.facebook,
+          phoneNumber: productData.phoneNumber,
+        });
+      });
+      setProductData({
+        productName: '',
+        imagePath: '',
+        category: null,
+        description: '',
+        price: '',
+        instagram: '',
+        facebook: '',
+        phoneNumber: '',
+      });
+      dropdownRef.current.reset();
+      alert('Successfully save your product!');
+    }
   };
 
   useEffect(() => {
@@ -75,6 +126,22 @@ const AddProductScreen = () => {
             placeholder="Product Name"
             value={productData.productName}
             onChangeText={text => onInputChange('productName', text)}
+          />
+          <SelectDropdown
+            data={categoryList}
+            defaultButtonText="Select Category"
+            onSelect={item => {
+              onInputChange('category', item.id);
+            }}
+            buttonTextAfterSelection={item => {
+              return item.name;
+            }}
+            rowTextForSelection={item => {
+              return item.name;
+            }}
+            buttonStyle={styles.SelectDropdown}
+            buttonTextStyle={styles.selectText}
+            ref={dropdownRef}
           />
         </View>
         <View style={styles.horizontalContainer}>
@@ -119,7 +186,7 @@ const AddProductScreen = () => {
           type="font-awesome"
         />
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.saveButton}>
+          <TouchableOpacity style={styles.saveButton} onPress={saveData}>
             <Text style={styles.saveText}>SAVE</Text>
           </TouchableOpacity>
         </View>
@@ -174,6 +241,16 @@ const styles = StyleSheet.create({
   },
   saveText: {
     color: 'black',
+  },
+  SelectDropdown: {
+    borderRadius: 10,
+    backgroundColor: 'skyblue',
+    width: 150,
+    height: 30,
+    marginLeft: 8,
+  },
+  selectText: {
+    fontSize: 12,
   },
 });
 export default AddProductScreen;
