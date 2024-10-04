@@ -11,7 +11,8 @@ import {imageSlider} from '../../data/Data';
 import {SliderBox} from 'react-native-image-slider-box';
 import {categoryList} from '../../data/Data';
 
-const HomeScreen = () => {
+const HomeScreen = props => {
+  const {navigation} = props;
   return (
     <View style={styles.mainContainer}>
       <SliderBox
@@ -32,7 +33,11 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => {
           return (
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                navigation.navigate('ShowProduct', {categoryId: item.id})
+              }>
               <Image source={{uri: item.icon}} style={styles.icon} />
               <Text style={styles.itemName}>{item.name}</Text>
             </TouchableOpacity>

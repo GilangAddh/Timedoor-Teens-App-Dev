@@ -5,6 +5,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon} from 'react-native-elements';
 import HomeScreen from '../screens/HomeScreen';
 import AddProductScreen from '../screens/AddProductScreen';
+import ShowProductScreen from '../screens/ShowProductScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -49,6 +50,17 @@ const MainNavigator = () => {
           component={DrawerNav}
           options={{
             headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="ShowProduct"
+          component={ShowProductScreen}
+          options={{
+            title: 'Product',
+            headerStyle: {
+              backgroundColor: '#D1E5C2',
+            },
+            headerTitleAlign: 'center',
           }}
         />
       </Stack.Navigator>
