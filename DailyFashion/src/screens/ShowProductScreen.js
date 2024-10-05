@@ -10,6 +10,11 @@ import React, {useEffect, useState} from 'react';
 import realm from '../../store/realm';
 import {Icon} from 'react-native-elements';
 import {MediaComponent} from '../components/MediaComponents';
+import {Linking} from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen-hooks';
 
 const ShowProductScreen = props => {
   const {navigation, route} = props;
@@ -35,6 +40,16 @@ const ShowProductScreen = props => {
     setIsBuy(true);
   };
 
+  const onClickMedia = type => {
+    if (type === 'whatsapp') {
+      Linking.openURL(`https://wa.me/${contact.phoneNumber}`);
+    } else if (type === 'instagram') {
+      Linking.openURL(`https://www.instagram.com/${contact.phoneNumber}`);
+    } else {
+      Linking.openURL(`https://m.me/${contact.facebook}`);
+    }
+  };
+
   useEffect(() => {
     console.log(category);
     const productPage = navigation.addListener('focus', () => {
@@ -58,7 +73,14 @@ const ShowProductScreen = props => {
           return (
             <TouchableOpacity style={styles.itemButton}>
               <View style={styles.productContainer}>
-                <Image style={styles.image} source={{uri: item.imagePath}} />
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('ImageZoom', {
+                      imagePath: item.imagePath,
+                    })
+                  }>
+                  <Image style={styles.image} source={{uri: item.imagePath}} />
+                </TouchableOpacity>
                 <View style={styles.textContainer}>
                   <Text style={styles.title}>{item.productName}</Text>
                   <Text style={styles.text}>{item.description}</Text>
@@ -67,7 +89,7 @@ const ShowProductScreen = props => {
               </View>
               <TouchableOpacity
                 onPress={() =>
-                  buyProduct(item.phoneNumber, item.facebook, item.instagram)
+                  buyProduct(item.phoneNumber, item.instagram, item.facebook)
                 }>
                 <Icon name="shoppingcart" type="antdesign" size={30} />
               </TouchableOpacity>
@@ -90,18 +112,21 @@ const ShowProductScreen = props => {
               <MediaComponent
                 source={require('../../assets/images/whatsapp.png')}
                 value={contact.phoneNumber}
+                onPress={() => onClickMedia('whatsapp')}
               />
             ) : null}
             {contact.instagram !== '' ? (
               <MediaComponent
                 source={require('../../assets/images/instagram.png')}
                 value={contact.instagram}
+                onPress={() => onClickMedia('instagram')}
               />
             ) : null}
             {contact.facebook !== '' ? (
               <MediaComponent
                 source={require('../../assets/images/facebook.png')}
                 value={contact.facebook}
+                onPress={() => onClickMedia('facebook')}
               />
             ) : null}
           </View>
@@ -134,8 +159,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   image: {
-    width: 100,
-    height: 100,
+    width: wp('25%'),
+    height: wp('25%'),
   },
   textContainer: {
     flex: 1,
@@ -144,12 +169,12 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'black',
-    fontSize: 18,
+    fontSize: hp('2.5%'),
     fontWeight: 'bold',
   },
   text: {
     color: 'black',
-    fontSize: 16,
+    fontSize: hp('2%'),
   },
   noItems: {
     textAlign: 'center',
