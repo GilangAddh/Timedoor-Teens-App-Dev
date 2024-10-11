@@ -8,13 +8,14 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import realm from '../../store/realm';
-import {Icon} from 'react-native-elements';
+import {Icon, CheckBox} from 'react-native-elements';
 import {MediaComponent} from '../components/MediaComponents';
 import {Linking} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen-hooks';
+import {ButtonComponent} from '../components/ButtonComponents';
 
 const ShowProductScreen = props => {
   const {navigation, route} = props;
@@ -26,10 +27,16 @@ const ShowProductScreen = props => {
     facebook: '',
   });
   const category = route.params.categoryId;
+  const [isRemove, setIsRemove] = useState(false);
 
   const collectData = () => {
     const allData = realm.objects('Product').filtered(`category = ${category}`);
-    setData(allData);
+    const newData = allData.map(item => {
+      item.checkedStatus = false;
+      return item;
+    });
+    setData(newData);
+    console.log(newData);
   };
   const buyProduct = (whatsapp, instagramId, facebookId) => {
     setContact({
@@ -47,6 +54,51 @@ const ShowProductScreen = props => {
       Linking.openURL(`https://www.instagram.com/${contact.phoneNumber}`);
     } else {
       Linking.openURL(`https://m.me/${contact.facebook}`);
+    }
+  };
+
+  const setCheckBox = (id, status) => {
+    const newData = data.map(item => {
+      if (item.id === id) {
+        item.checkedStatus = !status;
+      }
+      return item;
+    });
+    setData(newData);
+  };
+
+  const onCancel = () => {
+    const newData = data.map(item => {
+      item.checkedStatus = false;
+      return item;
+    });
+    setData(newData);
+    setIsRemove(false);
+  };
+
+  const onDelete = () => {
+    const checkedTrue = [];
+
+    data.forEach(item => {
+      if (item.checkedStatus) {
+        checkedTrue.push(item.id);
+      }
+    });
+
+    if (checkedTrue.length != 0) {
+      realm.write(() => {
+        for (let i = 0; i < checkedTrue.length; i++) {
+          const removeData = realm
+            .objects('Product')
+            .filtered(`id = ${checkedTrue[i]}`);
+          realm.delete(removeData);
+        }
+      });
+      alert('Successfully removed the products!');
+      setIsRemove(false);
+      collectData();
+    } else {
+      alert('Nothing to remove!');
     }
   };
 
@@ -75,7 +127,13 @@ const ShowProductScreen = props => {
               style={styles.itemButton}
               onPress={() =>
                 navigation.navigate('EditProduct', {idProduct: item.id})
-              }>
+              }
+              onLongPress={() => setIsRemove(true)}>
+              {/* <TouchableOpacity
+                  style={styles.itemButton}
+                  onPress={() => navigation.navigate('EditProduct', { idProduct: item.id })}
+                  onLongPress={() => setIsRemove(prevState => !prevState)}
+              > */}
               <View style={styles.productContainer}>
                 <TouchableOpacity
                   onPress={() =>
@@ -91,12 +149,21 @@ const ShowProductScreen = props => {
                   <Text style={styles.text}>$ {item.price}</Text>
                 </View>
               </View>
-              <TouchableOpacity
-                onPress={() =>
-                  buyProduct(item.phoneNumber, item.instagram, item.facebook)
-                }>
-                <Icon name="shoppingcart" type="antdesign" size={30} />
-              </TouchableOpacity>
+              {isRemove ? (
+                <CheckBox
+                  size={30}
+                  containerStyle={styles.checkBox}
+                  onPress={() => setCheckBox(item.id, item.checkedStatus)}
+                  checked={item.checkedStatus}
+                />
+              ) : (
+                <TouchableOpacity
+                  onPress={() =>
+                    buyProduct(item.phoneNumber, item.instagram, item.facebook)
+                  }>
+                  <Icon name="shoppingcart" type="antdesign" size={30} />
+                </TouchableOpacity>
+              )}
             </TouchableOpacity>
           );
         }}
@@ -134,6 +201,20 @@ const ShowProductScreen = props => {
               />
             ) : null}
           </View>
+        </View>
+      ) : null}
+      {isRemove ? (
+        <View style={styles.buttonContainer}>
+          <ButtonComponent
+            backgroundColor="red"
+            title="Delete"
+            onPress={() => onDelete()}
+          />
+          <ButtonComponent
+            backgroundColor="green"
+            title="Cancel"
+            onPress={() => onCancel()}
+          />
         </View>
       ) : null}
     </View>
@@ -208,6 +289,14 @@ const styles = StyleSheet.create({
   sellerText: {
     marginBottom: 8,
     marginTop: 32,
+  },
+  checkBox: {
+    position: 'absolute',
+    right: 0,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    height: hp('7%'),
   },
 });
 
