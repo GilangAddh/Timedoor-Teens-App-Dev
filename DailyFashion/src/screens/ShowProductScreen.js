@@ -71,7 +71,11 @@ const ShowProductScreen = props => {
         }
         renderItem={({item}) => {
           return (
-            <TouchableOpacity style={styles.itemButton}>
+            <TouchableOpacity
+              style={styles.itemButton}
+              onPress={() =>
+                navigation.navigate('EditProduct', {idProduct: item.id})
+              }>
               <View style={styles.productContainer}>
                 <TouchableOpacity
                   onPress={() =>

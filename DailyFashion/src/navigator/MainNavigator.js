@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import AddProductScreen from '../screens/AddProductScreen';
 import ShowProductScreen from '../screens/ShowProductScreen';
 import ImageZoomScreen from '../screens/ImageZoomScreen';
+import EditProductScreen from '../screens/EditProductScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -58,6 +59,17 @@ const MainNavigator = () => {
           component={ShowProductScreen}
           options={{
             title: 'Product',
+            headerStyle: {
+              backgroundColor: '#D1E5C2',
+            },
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Drawer.Screen
+          name="EditProduct"
+          component={EditProductScreen}
+          options={{
+            title: 'Edit Product',
             headerStyle: {
               backgroundColor: '#D1E5C2',
             },
