@@ -7,7 +7,7 @@ export const ProductSchema = {
     category: 'int',
     description: 'string',
     price: 'int',
-    instagram: 'string',
+    link: 'string',
     facebook: 'string',
     phoneNumber: 'string',
   },
